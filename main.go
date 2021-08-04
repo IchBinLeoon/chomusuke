@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"math"
@@ -14,33 +15,33 @@ import (
 	"syscall"
 )
 
-const version = "1.0.0"
+const version = "1.0.1"
 
 const (
-	BOLDBLACK = "\033[1;30m"
-	BOLDRED = "\033[1;31m"
-	BOLDGREEN = "\033[1;32m"
-	BOLDYELLOW = "\033[1;33m"
-	BOLDBLUE = "\033[1;34m"
+	BOLDBLACK   = "\033[1;30m"
+	BOLDRED     = "\033[1;31m"
+	BOLDGREEN   = "\033[1;32m"
+	BOLDYELLOW  = "\033[1;33m"
+	BOLDBLUE    = "\033[1;34m"
 	BOLDMAGENTA = "\033[1;35m"
-	BOLDCYAN = "\033[1;36m"
-	BOLDWHITE = "\033[1;37m"
-	BLACK = "\033[0;30m"
-	RED = "\033[0;31m"
-	GREEN = "\033[0;32m"
-	YELLOW = "\033[0;33m"
-	BLUE = "\033[0;34m"
-	MAGENTA = "\033[0;35m"
-	CYAN = "\033[0;36m"
-	WHITE = "\033[0;37m"
-	RESET = "\033[0;m"
+	BOLDCYAN    = "\033[1;36m"
+	BOLDWHITE   = "\033[1;37m"
+	BLACK       = "\033[0;30m"
+	RED         = "\033[0;31m"
+	GREEN       = "\033[0;32m"
+	YELLOW      = "\033[0;33m"
+	BLUE        = "\033[0;34m"
+	MAGENTA     = "\033[0;35m"
+	CYAN        = "\033[0;36m"
+	WHITE       = "\033[0;37m"
+	RESET       = "\033[0;m"
 )
 
 const ASCII = `
  	  ,_     _		
  	  |\\_,-~/		
  	  / _  _ |    ,--.	
-	 (  `+ YELLOW + `@  @` + RESET + ` )   / ,-'	
+	 (  ` + YELLOW + `@  @` + RESET + ` )   / ,-'	
 	  \  _` + RED + `T` + RESET + `_/-._( (		
  	 /         '. \		
 	|         _  \ |	
@@ -51,23 +52,27 @@ const ASCII = `
 
 func main() {
 	checkSystem()
+	versionFlag := flag.Bool("v", false, "print version and exit")
+	flag.Parse()
+	if *versionFlag {
+		fmt.Printf("chomusuke version %s\n", version)
+		os.Exit(0)
+	}
 	ascii := sliceASCII()
-	host := fmt.Sprintf("\n\t\t\t\t%s%s%s@%s%s%s", BOLDGREEN, getUsername(), RESET, BOLDGREEN, getHostname(), RESET)
-	fmt.Println(host)
-	line := fmt.Sprintf("%s%s", ascii[1], strings.Repeat("-", len(fmt.Sprintf("%s@%s", getUsername(), getHostname()))))
-	fmt.Println(line)
-	fmt.Println(fmt.Sprintf("%s%sOS%s\t %s", ascii[2], BOLDCYAN, RESET, getOS()))
-	fmt.Println(fmt.Sprintf("%s%sKernel%s\t %s", ascii[3], BOLDCYAN, RESET, getKernel()))
-	fmt.Println(fmt.Sprintf("%s%sArch%s\t %s", ascii[4], BOLDCYAN, RESET, getArchitecture()))
-	fmt.Println(fmt.Sprintf("%s%sShell%s\t %s", ascii[5], BOLDCYAN, RESET, getShell()))
-	fmt.Println(fmt.Sprintf("%s%sDE%s\t %s", ascii[6], BOLDCYAN, RESET, getDE()))
-	fmt.Println(fmt.Sprintf("%s%sUptime%s\t %s", ascii[7], BOLDCYAN, RESET, getUptime()))
-	fmt.Println(fmt.Sprintf("%s%sCPU%s\t %s", ascii[8], BOLDCYAN, RESET, getCPU()))
-	fmt.Println(fmt.Sprintf("%s%sMemory%s\t %s", ascii[9], BOLDCYAN, RESET, getMemory()))
-	fmt.Println(ascii[10])
+	fmt.Printf("\n\t\t\t\t%s%s%s@%s%s%s", BOLDGREEN, getUsername(), RESET, BOLDGREEN, getHostname(), RESET)
+	fmt.Printf("\n%s%s", ascii[1], strings.Repeat("-", len(fmt.Sprintf("%s@%s", getUsername(), getHostname()))))
+	fmt.Printf("\n%s%sOS%s\t %s", ascii[2], BOLDCYAN, RESET, getOS())
+	fmt.Printf("\n%s%sKernel%s\t %s", ascii[3], BOLDCYAN, RESET, getKernel())
+	fmt.Printf("\n%s%sArch%s\t %s", ascii[4], BOLDCYAN, RESET, getArchitecture())
+	fmt.Printf("\n%s%sShell%s\t %s", ascii[5], BOLDCYAN, RESET, getShell())
+	fmt.Printf("\n%s%sDE%s\t %s", ascii[6], BOLDCYAN, RESET, getDE())
+	fmt.Printf("\n%s%sUptime%s\t %s", ascii[7], BOLDCYAN, RESET, getUptime())
+	fmt.Printf("\n%s%sCPU%s\t %s", ascii[8], BOLDCYAN, RESET, getCPU())
+	fmt.Printf("\n%s%sMemory%s\t %s", ascii[9], BOLDCYAN, RESET, getMemory())
+	fmt.Printf("\n%s", ascii[10])
 	palettes := getPalettes()
-	fmt.Println(fmt.Sprintf("\t\t\t\t%s", palettes[0]))
-	fmt.Println(fmt.Sprintf("\t\t\t\t%s\n", palettes[1]))
+	fmt.Printf("\n\t\t\t\t%s", palettes[0])
+	fmt.Printf("\n\t\t\t\t%s\n\n", palettes[1])
 }
 
 func checkSystem() {
@@ -200,7 +205,7 @@ func getMemory() string {
 	if err != nil {
 		available = 0
 	}
-	memory := fmt.Sprintf("%dMB / %dMB", (total - available) / 1024, total / 1024)
+	memory := fmt.Sprintf("%dMB / %dMB", (total-available)/1024, total/1024)
 	return memory
 }
 
