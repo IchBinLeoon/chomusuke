@@ -22,7 +22,7 @@
 
 ## Installation
 ```
-$ go get github.com/IchBinLeoon/chomusuke
+$ go install github.com/IchBinLeoon/chomusuke@latest
 ```
 
 ## Usage
